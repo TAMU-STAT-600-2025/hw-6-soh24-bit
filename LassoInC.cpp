@@ -6,6 +6,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 double soft_c(double a, double lambda){
   // Your function code goes here
+  return arma::sign(a) * std::max(std::abs(a) - lambda, 0.0);
 }
 
 // Lasso objective function, returns scalar
