@@ -64,11 +64,28 @@ mark(
 # Do at least 2 tests for fitLASSOstandardized function below. You are checking output agreements on at least 2 separate inputs
 #################################################
 
+beta_start1 <- c(0.5, 0.5)
+
+# cpp version only includes beta so set check = FALSE. However, I verified the beta values are equal
+mark(
+  fitLASSOstandardized(Xtilde1, Ytilde1, lambda1, beta_start1),
+  fitLASSOstandardized_c(Xtilde1, Ytilde1, lambda1, beta_start1),
+  check = FALSE
+)
+
 # Do microbenchmark on fitLASSOstandardized vs fitLASSOstandardized_c
 ######################################################################
 
+microbenchmark::microbenchmark(
+  fitLASSOstandardized(Xtilde1, Ytilde1, lambda1, beta_start1),
+  fitLASSOstandardized_c(Xtilde1, Ytilde1, lambda1, beta_start1),
+  times = 10
+)
+
 # Do at least 2 tests for fitLASSOstandardized_seq function below. You are checking output agreements on at least 2 separate inputs
 #################################################
+
+
 
 # Do microbenchmark on fitLASSOstandardized_seq vs fitLASSOstandardized_seq_c
 ######################################################################
