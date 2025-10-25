@@ -14,29 +14,52 @@ source("LassoFunctions.R")
 
 # Do at least 2 tests for soft-thresholding function below. You are checking output agreements on at least 2 separate inputs
 #################################################
-a <- 20
-lambda <- 2.1
+a1 <- 20
+lambda1 <- 2.1
 
 mark(
-  soft(a, lambda),
-  soft_c(a,lambda),
+  soft(a1, lambda1),
+  soft_c(a1,lambda1),
   check = TRUE
 )
 
-# Do at least 2 tests for soft-thresholding function below. You are checking output agreements on at least 2 separate inputs
-#################################################
-a_2 <- -20
-lambda_2 <- 2.1
+a2 <- -20
+lambda2 <- 2.1
 
 mark(
-  soft(a_2, lambda_2),
-  soft_c(a_2,lambda_2),
+  soft(a2, lambda2),
+  soft_c(a2,lambda2),
   check = TRUE
 )
 
 # Do at least 2 tests for lasso objective function below. You are checking output agreements on at least 2 separate inputs
 #################################################
 
+n1 <- 2
+p1 <- 2
+Xtilde1 <- matrix(c(1, 0, 0, 1), nrow = n1, ncol = p1) # 2x2 Identity matrix
+Ytilde1 <- c(3, 5)
+beta1 <- c(1, 1)
+lambda1 <- 0.5
+
+mark(
+  lasso(Xtilde1, Ytilde1, beta1, lambda1),
+  lasso_c(Xtilde1, Ytilde1, beta1, lambda1),
+  check = TRUE
+)
+
+n2 <- 3
+p2 <- 2
+Xtilde2 <- matrix(c(1.5, 2.1, -0.5, 0.2, 1.0, 3.0), nrow = n2, ncol = p2)
+Ytilde2 <- c(5.5, 1.2, 3.0)
+beta2 <- c(0.5, -1.2)
+lambda2 <- 1.1
+
+mark(
+  lasso(Xtilde2, Ytilde2, beta2, lambda2),
+  lasso_c(Xtilde2, Ytilde2, beta2, lambda2),
+  check = TRUE
+)
 
 # Do at least 2 tests for fitLASSOstandardized function below. You are checking output agreements on at least 2 separate inputs
 #################################################
