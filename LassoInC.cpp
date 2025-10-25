@@ -65,4 +65,20 @@ arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec&
 // [[Rcpp::export]]
 arma::mat fitLASSOstandardized_seq_c(const arma::mat& Xtilde, const arma::colvec& Ytilde, const arma::colvec& lambda_seq, double eps = 0.001){
   // Your function code goes here
+  int n = Xtilde.n_rows;
+  int p = Xtilde.n_cols;
+  int n_lambda = lambda_seq.n_elem;
+  
+  arma::mat beta_mat(p, n_lambda);
+  arma::colvec fmin_vec(n_lambda);
+  
+  arma::colvec beta_current(p);
+  
+  for (int i = 0; i < n_lambda; i++) {
+    
+    arma::colvec currentfit = fitLASSOstandardized_c(Xtilde, Ytilde, lambda_seq(i), beta_current, eps);
+    
+    beta_mat.col(i) = currentfit;
+  }
+  return beta_mat;
 }
