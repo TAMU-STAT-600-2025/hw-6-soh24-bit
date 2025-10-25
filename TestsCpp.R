@@ -106,17 +106,37 @@ microbenchmark::microbenchmark(
 
 # We are allowed to assume lambda_seq is already sorted
 
-lambda
+lambda_seq1 <- seq(from = 60, to = 0, length.out = 100)
 
 mark(
-  fitLASSOstandardized(Xtilde1, Ytilde1, lambda1, beta_start1),
-  fitLASSOstandardized_c(Xtilde1, Ytilde1, lambda1, beta_start1),
+  fitLASSOstandardized_seq(Xtilde1, Ytilde1, lambda_seq1),
+  fitLASSOstandardized_seq_c(Xtilde1, Ytilde1, lambda_seq1),
+  check = FALSE
+)
+
+lambda_seq2 <- seq(from = 60, to = 0, length.out = 100)
+
+mark(
+  fitLASSOstandardized_seq(Xtilde2, Ytilde2, lambda_seq2),
+  fitLASSOstandardized_seq_c(Xtilde2, Ytilde2, lambda_seq2),
   check = FALSE
 )
 
 
 # Do microbenchmark on fitLASSOstandardized_seq vs fitLASSOstandardized_seq_c
 ######################################################################
+
+microbenchmark::microbenchmark(
+  fitLASSOstandardized_seq(Xtilde1, Ytilde1, lambda_seq1),
+  fitLASSOstandardized_seq_c(Xtilde1, Ytilde1, lambda_seq1),
+  times = 10
+)
+
+microbenchmark::microbenchmark(
+  fitLASSOstandardized_seq(Xtilde2, Ytilde2, lambda_seq2),
+  fitLASSOstandardized_seq_c(Xtilde2, Ytilde2, lambda_seq2),
+  times = 10
+)
 
 # Tests on riboflavin data
 ##########################
