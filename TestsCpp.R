@@ -3,7 +3,7 @@
 library(Rcpp)
 library(RcppArmadillo)
 
-# Libraries for bench
+# Libraries for bench and load in example data set
 library(bench)
 
 # Source your C++ funcitons
@@ -35,11 +35,13 @@ mark(
 # Do at least 2 tests for lasso objective function below. You are checking output agreements on at least 2 separate inputs
 #################################################
 
-n1 <- 2
-p1 <- 2
-Xtilde1 <- matrix(c(1, 0, 0, 1), nrow = n1, ncol = p1) # 2x2 Identity matrix
-Ytilde1 <- c(3, 5)
-beta1 <- c(1, 1)
+data1 <- mtcars
+X1 <- as.matrix(data1[,3:7])
+Y1 <- as.matrix(data1[,1])
+standardized_data1 <- standardizeXY(X1, Y1)
+Xtilde1 <- standardized_data1$Xtilde # 2x2 Identity matrix
+Ytilde1 <- standardized_data1$Ytilde
+beta1 <- rep(1.5, 5)
 lambda1 <- 0.5
 
 mark(
@@ -48,12 +50,14 @@ mark(
   check = TRUE
 )
 
-n2 <- 3
-p2 <- 2
-Xtilde2 <- matrix(c(1.5, 2.1, -0.5, 0.2, 1.0, 3.0), nrow = n2, ncol = p2)
-Ytilde2 <- c(5.5, 1.2, 3.0)
-beta2 <- c(0.5, -1.2)
-lambda2 <- 1.1
+data2 <- iris
+X2 <- as.matrix(data2[,2:4])
+Y2 <- as.matrix(data2[,1])
+standardized_data2 <- standardizeXY(X2, Y2)
+Xtilde2 <- standardized_data2$Xtilde # 2x2 Identity matrix
+Ytilde2 <- standardized_data2$Ytilde
+beta2 <- rep(2.5, 3)
+lambda2 <- 0.5
 
 mark(
   lasso(Xtilde2, Ytilde2, beta2, lambda2),
@@ -64,12 +68,21 @@ mark(
 # Do at least 2 tests for fitLASSOstandardized function below. You are checking output agreements on at least 2 separate inputs
 #################################################
 
-beta_start1 <- c(0.5, 0.5)
+beta_start1 <- rep(-1.5, 5)
 
 # cpp version only includes beta so set check = FALSE. However, I verified the beta values are equal
 mark(
   fitLASSOstandardized(Xtilde1, Ytilde1, lambda1, beta_start1),
   fitLASSOstandardized_c(Xtilde1, Ytilde1, lambda1, beta_start1),
+  check = FALSE
+)
+
+beta_start2 <- c(0.1, -0.2, 0.5)
+
+# cpp version only includes beta so set check = FALSE. However, I verified the beta values are equal
+mark(
+  fitLASSOstandardized(Xtilde2, Ytilde2, lambda2, beta_start2),
+  fitLASSOstandardized_c(Xtilde2, Ytilde2, lambda2, beta_start2),
   check = FALSE
 )
 
@@ -82,9 +95,24 @@ microbenchmark::microbenchmark(
   times = 10
 )
 
+microbenchmark::microbenchmark(
+  fitLASSOstandardized(Xtilde2, Ytilde2, lambda2, beta_start2),
+  fitLASSOstandardized_c(Xtilde2, Ytilde2, lambda2, beta_start2),
+  times = 10
+)
+
 # Do at least 2 tests for fitLASSOstandardized_seq function below. You are checking output agreements on at least 2 separate inputs
 #################################################
 
+# We are allowed to assume lambda_seq is already sorted
+
+lambda
+
+mark(
+  fitLASSOstandardized(Xtilde1, Ytilde1, lambda1, beta_start1),
+  fitLASSOstandardized_c(Xtilde1, Ytilde1, lambda1, beta_start1),
+  check = FALSE
+)
 
 
 # Do microbenchmark on fitLASSOstandardized_seq vs fitLASSOstandardized_seq_c
