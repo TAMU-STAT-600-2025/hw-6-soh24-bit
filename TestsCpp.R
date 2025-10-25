@@ -3,6 +3,9 @@
 library(Rcpp)
 library(RcppArmadillo)
 
+# Libraries for bench
+library(bench)
+
 # Source your C++ funcitons
 sourceCpp("LassoInC.cpp")
 
@@ -11,7 +14,25 @@ source("LassoFunctions.R")
 
 # Do at least 2 tests for soft-thresholding function below. You are checking output agreements on at least 2 separate inputs
 #################################################
+a <- 20
+lambda <- 2.1
 
+mark(
+  soft(a, lambda),
+  soft_c(a,lambda),
+  check = TRUE
+)
+
+# Do at least 2 tests for soft-thresholding function below. You are checking output agreements on at least 2 separate inputs
+#################################################
+a_2 <- -20
+lambda_2 <- 2.1
+
+mark(
+  soft(a_2, lambda_2),
+  soft_c(a_2,lambda_2),
+  check = TRUE
+)
 
 # Do at least 2 tests for lasso objective function below. You are checking output agreements on at least 2 separate inputs
 #################################################
