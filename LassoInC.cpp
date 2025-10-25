@@ -13,12 +13,22 @@ double soft_c(double a, double lambda){
 // [[Rcpp::export]]
 double lasso_c(const arma::mat& Xtilde, const arma::colvec& Ytilde, const arma::colvec& beta, double lambda){
   // Your function code goes here
+  const arma::uword n = Xtilde.n_rows;
+  arma::colvec r = Ytilde - Xtilde * beta;
+  
+  double fobj = (1.0 / (2.0 * n)) * arma::dot(r, r) + lambda * arma::accu(arma::abs(beta));
+  
+  return fobj;
 }
 
 // Lasso coordinate-descent on standardized data with one lamdba. Returns a vector beta.
 // [[Rcpp::export]]
 arma::colvec fitLASSOstandardized_c(const arma::mat& Xtilde, const arma::colvec& Ytilde, double lambda, const arma::colvec& beta_start, double eps = 0.001){
   // Your function code goes here
+  const arma::uword n = Xtilde.n_rows;
+  const arma::uword p = Xtilde.n_cols;
+  
+  
 }  
 
 // Lasso coordinate-descent on standardized data with supplied lambda_seq. 
